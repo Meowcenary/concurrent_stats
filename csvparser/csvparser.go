@@ -5,7 +5,6 @@ import (
 	"encoding/csv"
 	"os"
 	"path"
-	"strconv"
 )
 
 type InvalidCsvPathError struct{
@@ -64,9 +63,9 @@ func ReadCSV(filepath string) ([][]string, error) {
 
 // create mapping of CSV headers to all values in column
 // data is rows of CSV data read from a file with headers
-func CsvDataByColumn(data [][]string) (map[string][]float64, error) {
+func CsvDataByColumn(data [][]string) (map[string][]string, error) {
 	headerIndex := make(map[int]string)
-	dataByColumn := make(map[string][]float64)
+	dataByColumn := make(map[string][]string)
 
 	// Pop header data off of data and create mapping to csv data
 	headers, data := data[0], data[1:]
@@ -77,13 +76,7 @@ func CsvDataByColumn(data [][]string) (map[string][]float64, error) {
 	for _, row := range data {
 		for i, v := range row {
 			header := headerIndex[i]
-			value, err := strconv.ParseFloat(v, 64)
-
-			if err == nil {
-				dataByColumn[header] = append(dataByColumn[header], value)
-			} else {
-				return nil, err
-			}
+			dataByColumn[header] = append(dataByColumn[header], v)
 		}
 	}
 
