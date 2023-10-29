@@ -11,6 +11,7 @@ TODO
 
 ### Resources Referenced
 - [Wikipedia - Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics))
+- [Wikipedia - Cross Validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics))
 - [A Gentle Introduction to the Bootstrap Method](https://machinelearningmastery.com/a-gentle-introduction-to-the-bootstrap-method/)
 - [Gonum/stat Package Documentation](https://pkg.go.dev/gonum.org/v1/gonum@v0.14.0/stat)
 - [Investopedia: Multiple Linear Regression](https://www.investopedia.com/terms/m/mlr.asp)

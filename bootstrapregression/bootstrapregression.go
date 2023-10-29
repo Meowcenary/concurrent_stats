@@ -1,8 +1,6 @@
 package bootstrapregression
 
 import (
-	// "fmt"
-	// "log"
 	"math/rand"
 	"time"
 
