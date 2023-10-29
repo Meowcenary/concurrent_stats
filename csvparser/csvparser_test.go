@@ -48,10 +48,10 @@ func TestCsvDataByColumn(t *testing.T) {
 		{"181", "920", "212"},
 	}
 
-	expectedDataByColumn := map[string][]string{
-		"Easy": {"123", "101", "415", "181"},
-		"Test": {"456", "121", "161", "920"},
-		"Data": {"789", "131", "171", "212"},
+	expectedDataByColumn := map[string][]float64{
+		"Easy": {123.0, 101.0, 415.0, 181.0},
+		"Test": {456.0, 121.0, 161.0, 920.0},
+		"Data": {789.0, 131.0, 171.0, 212.0},
 	}
 
 	dataByColumn, err := CsvDataByColumn(data)
