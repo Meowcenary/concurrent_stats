@@ -4,9 +4,9 @@ import (
 	// "fmt"
 	// "log"
 	"math/rand"
-	// "time"
+	"time"
 
-	// "gonum.org/v1/gonum/stat"
+	"gonum.org/v1/gonum/stat"
 )
 
 type UnmappableError struct{
@@ -30,35 +30,43 @@ func NewPoint(x, y float64) *Point {
 	}
 }
 
-// if going with the original data format this will be something like
-// {
-//   field: [float1, float2, etc]
-//
-// func BootstrapRegression(data [string]float64) {
-// 	// Initialize randomness
-// 	seed := time.Now().UnixNano()
-// 	fmt.Println("Seeding with: ", seed)
-// 	rand.NewSource(seed)
-//
-// 	samples := createBootstrapSamples()
-//
-// 	// unassigned var in case of future refactors and for readability
-// 	var weights []float64
-// 	// Do not force the regression line to pass through the origin.
-// 	origin := false
-//
-// 	// linear regression for each variable
-// 	// ...
-// }
+func BootstrapRegression(independentData []float64, dependentData []float64) (alpha float64, beta float64, err error) {
+	// Initialize randomness
+	seed := time.Now().UnixNano()
+	data, err := CreatePoints(independentData, dependentData)
 
-// perform linear regression for a set of data
-// func linearRegressionForSamples(samples []float64) {
-// 	alpha, beta := stat.LinearRegression(xs, ys, nil, origin)
-// 	r2 := stat.RSquared(xs, ys, nil, alpha, beta)
-// 	// fmt.Printf("Estimated offset is: %.6f\n", alpha)
-// 	// fmt.Printf("Estimated slope is:  %.6f\n", beta)
-// 	// fmt.Printf("R^2: %.6f\n", r2)
-// }
+	if err != nil {
+		return 0.0, 0.0, err
+	}
+
+	samples := CreateBootstrapSamples(rand.New(rand.NewSource(seed)), data)
+	totalAlpha := 0.0
+	totalBeta := 0.0
+
+	for _, sample := range samples {
+		alpha, beta := LinearRegressionForSample(sample)
+		totalAlpha += alpha
+		totalBeta += beta
+	}
+
+	samplesSize := float64(len(samples))
+	return totalAlpha/samplesSize, totalBeta/samplesSize, nil
+}
+
+// perform linear regression for sample of data returning
+// alpha - the offset and beta - the slope coefficient
+func LinearRegressionForSample(data []Point) (alpha, beta float64) {
+	dataLength := len(data)
+	independentVarData := make([]float64, dataLength)
+	dependentVarData := make([]float64, dataLength)
+
+	for i := 0; i < dataLength; i++ {
+		independentVarData[i] = data[i].X
+		dependentVarData[i] = data[i].Y
+	}
+
+	return stat.LinearRegression(independentVarData, dependentVarData, nil, false)
+}
 
 func CreatePoints(independentVarData []float64, dependentVarData []float64) ([]Point, error) {
 	independentVarLen := len(independentVarData)
@@ -76,13 +84,13 @@ func CreatePoints(independentVarData []float64, dependentVarData []float64) ([]P
 	return points, nil
 }
 
-func CreateBootstrapSamples(r *rand.Rand, data []float64) [][]float64 {
+func CreateBootstrapSamples(r *rand.Rand, data []Point) [][]Point {
 	// the initial sample from which the bootstrap samples will to return are drawn
 	initialSample := CreateBootstrapSample(r, data)
 
 	// number of bootstrap samples to create
 	samples := 1000
-	bootstrapSamples := make([][]float64, samples)
+	bootstrapSamples := make([][]Point, samples)
 	for i := 0; i < samples; i++ {
 		// initialSample is now selected from instead of the original data
 		bootstrapSamples[i] = CreateBootstrapSample(r, initialSample)
@@ -93,9 +101,9 @@ func CreateBootstrapSamples(r *rand.Rand, data []float64) [][]float64 {
 
 // the first argument is a pointer to rand.Rand so that the same random seed can be used all tests
 // there is probably a better way to do this, but given time constraints this was the approach I went with
-func CreateBootstrapSample(r *rand.Rand, data []float64) []float64 {
+func CreateBootstrapSample(r *rand.Rand, data []Point) []Point {
 	sampleSize := len(data)
-	bootstrapSample := make([]float64, sampleSize)
+	bootstrapSample := make([]Point, sampleSize)
 
 	for i := 0; i < sampleSize; i++ {
 		bootstrapSample[i] = data[r.Intn(sampleSize)]
