@@ -1,6 +1,24 @@
 # concurrent_stats
 Package to explore concurrency in Go and how to use it for statistical analysis
 
+### Installation
+To clone the concurent_stats package use:
+    `git clone https://github.com/Meowcenary/concurrent_stats.git`
+
+Once cloned the program can be run from the root directory with the following
+command where concurrent or serial are command line arguments:
+
+```
+go run main.go [concurrent/serial]
+```
+
+Or:
+
+```
+go build main.go
+./main [concurrent/serial]
+```
+
 ### Running the Tests
 To run all the tests use `go test ./...` from the root directory of the project.
 Alternatively use `go test ./<package_name>` to run an individual package's

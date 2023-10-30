@@ -5,6 +5,7 @@ import (
 )
 
 // Cross validation that leaves out one record
+// A good refactor would be to accept an integer argument p - the number of values to leave out
 // Calculate regression for data with one value removed each time and take the average
 func LeaveOutOneRegression(independentVarData []float64, dependentVarData []float64) (alpha float64, beta float64) {
 	dataSize := len(independentVarData)

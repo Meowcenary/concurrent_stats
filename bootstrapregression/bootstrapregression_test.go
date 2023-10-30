@@ -87,6 +87,6 @@ func TestCreateBootstrapSample(t *testing.T) {
 	bootstrapSample := CreateBootstrapSample(random(), data)
 
 	if !reflect.DeepEqual(bootstrapSample, expectedBootstrapSample) {
-		t.Errorf("%f", bootstrapSample)
+		t.Errorf("Bootstrap sample does not match what was expected.\nExpected: %f\nGot: %f\n", expectedBootstrapSample, bootstrapSample)
 	}
 }
